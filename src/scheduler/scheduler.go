@@ -5,20 +5,33 @@ import (
 )
 
 
-func BuildSchedule(n int) {
+type Matchup struct {
+  t1 int
+  t2 int
+}
 
-  // split into two conferences
-  c1, c2 := createTwoConferences(n)
-  fmt.Println(c1,c2)
+
+func BuildSchedule(n int) {
+  if n%2 == 1 {
+    n++
+  }
+
+  // split into two leagues
+  l1, l2 := createTwoLeagues(n)
+  fmt.Println(l1,l2)
 
   // build schedule for inter conference
     // this is the first 10 weeks of the schedule
+  var interLeagueSchedule [][]Matchup
+  interLeagueSchedule = buildInterLeagueMatchups(int(n/2), l1, l2)
+  fmt.Println(interLeagueSchedule)
+
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
 }
 
-func createTwoConferences(n int) ([]int, []int) {
+func createTwoLeagues(n int) ([]int, []int) {
   if n %2 == 1 {
     n++
   }
@@ -39,26 +52,28 @@ func createTwoConferences(n int) ([]int, []int) {
   return c1, c2
 }
 
-/*
-func buildRoundRobinSchedule(teams []int) {
-  if len(teams) % 2 != 0 {
-    teams[len(teams)] = -1
+
+
+func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
+  foo := make([][]Matchup, weeks)
+
+  for i := 0; i<weeks; i++ {
+    weekly := make([]Matchup, weeks)
+
+    for j := 0; j<weeks; j++ {
+      weekly[j] = Matchup{t1: l1[j], t2: l2[j]}
+    }
+    tmp := l2[0]
+    for j := 0; j<weeks-1; j++ {
+      l2[j] = l2[j+1]
+    }
+    l2[9] = tmp
+
+
+    foo[i] = weekly
   }
-  n := len(teams)
 
-  // split teams into two slices
-  top    := teams[0:n/2]
-  bottom := teams[n/2:n]
-
-  schedule := make([]Matchup, 0)
-  for ndx,_ range top {
-    m := getMatchup(ndx, top, bottom)
-  }
-
-  // [0]'s play each other, [1]s play each other, etc
-  // slice[0][1] is the anchor
-  // rotate all the other array elements
-  // split and pair
-
+  return foo
 }
-*/
+
+
