@@ -94,24 +94,27 @@ func buildIntraLeagueMatchups(l1 []int, l2 []int) [][]Matchup {
     fmt.Println(foo)
     fmt.Println("\n")
 
-    // rotate
-    tmp := topRow[4]
-    topRow[4] = topRow[3]
-    topRow[3] = topRow[2]
-    topRow[2] = topRow[1]
-
-    tmp2 := bottomRow[0]
-    bottomRow[0] = bottomRow[1]
-    bottomRow[1] = bottomRow[2]
-    bottomRow[2] = bottomRow[3]
-    bottomRow[3] =  bottomRow[4]
-    bottomRow[4] = tmp
-
-    topRow[1] = tmp2
+    topRow, bottomRow = rotateForIntra(topRow, bottomRow)
   }
 
   return nil
 }
 
 
+func rotateForIntra(a []int, b []int) ([]int, []int) {
+    tmp := a[4]
+    a[4] = a[3]
+    a[3] = a[2]
+    a[2] = a[1]
 
+    tmp2 := b[0]
+    b[0] = b[1]
+    b[1] = b[2]
+    b[2] = b[3]
+    b[3] =  b[4]
+    b[4] = tmp
+
+    a[1] = tmp2
+
+    return a,b
+}
