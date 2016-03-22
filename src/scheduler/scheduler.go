@@ -29,6 +29,8 @@ func BuildSchedule(n int) {
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
+  intraLeagueSchedule := buildIntraLeagueMatchups(l1, l2)
+  fmt.Println(intraLeagueSchedule)
 }
 
 func createTwoLeagues(n int) ([]int, []int) {
@@ -75,5 +77,41 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
 
   return foo
 }
+
+func buildIntraLeagueMatchups(l1 []int, l2 []int) [][]Matchup {
+  // l1 1,2,3,4, 5
+  //    6,7,8,9,10
+
+  topRow := l1[0:5]
+  bottomRow := l1[5:10]
+
+  for i:=0; i<9; i++ {
+
+    foo := make([]Matchup, 5)
+    for ndx,_ := range(topRow) {
+      foo[ndx] = Matchup{t1:topRow[ndx], t2:bottomRow[ndx]}
+    }
+    fmt.Println(foo)
+    fmt.Println("\n")
+
+    // rotate
+    tmp := topRow[4]
+    topRow[4] = topRow[3]
+    topRow[3] = topRow[2]
+    topRow[2] = topRow[1]
+
+    tmp2 := bottomRow[0]
+    bottomRow[0] = bottomRow[1]
+    bottomRow[1] = bottomRow[2]
+    bottomRow[2] = bottomRow[3]
+    bottomRow[3] =  bottomRow[4]
+    bottomRow[4] = tmp
+
+    topRow[1] = tmp2
+  }
+
+  return nil
+}
+
 
 
