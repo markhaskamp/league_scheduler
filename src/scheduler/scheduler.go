@@ -6,9 +6,38 @@ import (
 
 
 func BuildSchedule(n int) {
-  fmt.Println("n:", n)
+
+  // split into two conferences
+  c1, c2 := createTwoConferences(n)
+  fmt.Println(c1,c2)
+
+  // build schedule for inter conference
+    // this is the first 10 weeks of the schedule
+  // build schedules for intra conferences for each conference
+  // merge the two schedules
+    // this is the last 9 weeks of the schedule
 }
 
+func createTwoConferences(n int) ([]int, []int) {
+  if n %2 == 1 {
+    n++
+  }
+
+  var x int
+  x = n/2;
+
+  c1 := make([]int, x)
+  for i := 0; i<x; i++ {
+    c1[i] = i + 1
+  }
+
+  c2 := make([]int, x)
+  for i := x+1; i<=n; i++ {
+    c2[i-x-1] = i
+  }
+
+  return c1, c2
+}
 
 /*
 func buildRoundRobinSchedule(teams []int) {
