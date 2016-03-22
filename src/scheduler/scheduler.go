@@ -87,12 +87,11 @@ func buildIntraLeagueMatchups(l1 []int, l2 []int) [][]Matchup {
 
   for i:=0; i<9; i++ {
 
-    foo := make([]Matchup, 5)
+    gold := make([]Matchup, 5)
     for ndx,_ := range(topRow) {
-      foo[ndx] = Matchup{t1:topRow[ndx], t2:bottomRow[ndx]}
+      gold[ndx] = Matchup{t1:topRow[ndx], t2:bottomRow[ndx]}
     }
-    fmt.Println(foo)
-    fmt.Println("\n")
+    fmt.Println(gold)
 
     topRow, bottomRow = rotateForIntra(topRow, bottomRow)
   }
