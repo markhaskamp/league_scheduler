@@ -2,6 +2,8 @@ package scheduler
 
 import (
   "fmt"
+  "math/rand"
+  "time"
 )
 
 
@@ -23,31 +25,22 @@ func BuildSchedule(n int) {
     // this is the first 10 weeks of the schedule
   var interLeagueSchedule [][]Matchup
   interLeagueSchedule = buildInterLeagueMatchups(int(n/2), l1, l2)
-  fmt.Println("interLeagueSchedule")
-  printWeeklyMatchups(interLeagueSchedule)
 
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
   intraGoldSchedule := buildIntraLeagueMatchups(l1)
-  fmt.Println("intraGold")
-  printWeeklyMatchups(intraGoldSchedule)
 
-  fmt.Println("intraSilver")
   intraSilverSchedule := buildIntraLeagueMatchups(l2)
-  printWeeklyMatchups(intraSilverSchedule)
 
   // build entire intraLeague schedule
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
   for i:=0; i<len(intraSilverSchedule); i++ {
     intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
   }
-  fmt.Println("intraLeagueSchedule")
-  printWeeklyMatchups(intraLeagueSchedule)
 
   // append intraLeague onto (and after) interLeague
   completeSchedule := append(interLeagueSchedule, intraLeagueSchedule...)
-  fmt.Println("completeSchedule")
   printWeeklyMatchups(completeSchedule)
 
 }
@@ -91,11 +84,24 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
     }
     l2[9] = tmp
 
+    weekly = randomizeStartTimes(weekly)
 
     foo[i] = weekly
   }
 
   return foo
+}
+
+func randomizeStartTimes(matchups []Matchup) []Matchup {
+  returnMatchups := make([]Matchup, len(matchups))
+  time.Sleep(1234 * time.Millisecond)
+  randoms := randomRange(len(matchups))
+
+  for ndx,v := range randoms {
+    returnMatchups[ndx] = matchups[v]
+  }
+
+  return returnMatchups
 }
 
 
@@ -146,11 +152,38 @@ func rotateForIntra(n int, a []int, b []int) ([]int, []int) {
 }
 
 func printWeeklyMatchups(matchups [][]Matchup) {
-
-  for _,v := range matchups {
-    fmt.Println(v)
+  for _,week := range matchups {
+    fmt.Println(week)
   }
-
 }
 
 
+func randomRange(n int) []int {
+  returnArray := make([]int, 0)
+  s1 := rand.NewSource(time.Now().UnixNano())
+  r1 := rand.New(s1)
+
+  foo := map[int]int{0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
+
+  for not10(foo) {
+    num := r1.Intn(n)
+    if foo[num] == 0 {
+      returnArray = append(returnArray, num)
+    }
+      
+    foo[num] = 1
+  }
+
+  return returnArray
+}
+
+
+func not10(m map[int]int) bool {
+  total := 0
+
+  for _,v := range m {
+    total += v
+  }
+
+  return total < 10
+}
