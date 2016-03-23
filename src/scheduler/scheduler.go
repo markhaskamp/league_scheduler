@@ -18,7 +18,6 @@ func BuildSchedule(n int) {
     n++
   }
 
-  // split into two leagues
   l1, l2 := createTwoLeagues(n)
 
   var interLeagueSchedule [][]Matchup
@@ -35,7 +34,6 @@ func BuildSchedule(n int) {
 
   intraLeagueSchedule = randomizeWeeks(intraLeagueSchedule)
 
-  // append intraLeague onto (and after) interLeague
   completeSchedule := append(interLeagueSchedule, intraLeagueSchedule...)
   printWeeklyMatchups(completeSchedule)
 }
@@ -65,7 +63,7 @@ func createTwoLeagues(n int) ([]int, []int) {
 
 
 func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
-  foo := make([][]Matchup, weeks)
+  matchups := make([][]Matchup, weeks)
 
   for i := 0; i<weeks; i++ {
     weekly := make([]Matchup, weeks)
@@ -77,14 +75,15 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
     for j := 0; j<weeks-1; j++ {
       l2[j] = l2[j+1]
     }
-    l2[9] = tmp
+    lastSpot := len(l1) - 1
+    l2[lastSpot] = tmp
 
     weekly = randomizeStartTimes(weekly)
 
-    foo[i] = weekly
+    matchups[i] = weekly
   }
 
-  return foo
+  return matchups
 }
 
 func randomizeStartTimes(matchups []Matchup) []Matchup {
@@ -113,9 +112,6 @@ func randomizeWeeks(weeks [][]Matchup) [][]Matchup {
 
 
 func buildIntraLeagueMatchups(l1 []int) [][]Matchup {
-  // l1 1,2,3,4, 5
-  //    6,7,8,9,10
-
   n := len(l1)
   topRow := l1[0:n/2]
   bottomRow := l1[n/2:n]
@@ -170,19 +166,18 @@ func randomRange(n int) []int {
   s1 := rand.NewSource(time.Now().UnixNano())
   r1 := rand.New(s1)
 
-  foo := make(map[int]int)
+  randomMap := make(map[int]int)
   for i:=0; i<n; i++ {
-    foo[i] = 0
+    randomMap[i] = 0
   }
-  //foo := map[int]int{0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
 
-  for notDone(n, foo) {
+  for notDone(n, randomMap) {
     num := r1.Intn(n)
-    if foo[num] == 0 {
+    if randomMap[num] == 0 {
       returnArray = append(returnArray, num)
     }
       
-    foo[num] = 1
+    randomMap[num] = 1
   }
 
   return returnArray

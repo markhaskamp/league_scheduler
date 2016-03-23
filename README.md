@@ -1,5 +1,7 @@
 # Schedule Builder for Wednesday Golf League
 
+Currently only works for leagues whose member count is evenly divisible by 4
+
 ## tech stack
 
 - go
@@ -21,22 +23,3 @@
   - top row slides to the right 10 times to get 10 weeks of different matchups
 
 
-## Tasks
-
-### Doing
-
-- build round robin schedule for even number of teams
-
-### To Do
-
-- build round robin schedule for even number of teams
-- build schedule for 1st half
-- build schedule for 2nd half
-  - build schedule for teams 1-10
-  - build schedule for teasm 11-20
-  - merge schedules
-  - randomize within the week
-  - randomize the weeks
-
-
-### Done
