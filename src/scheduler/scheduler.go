@@ -37,12 +37,18 @@ func BuildSchedule(n int) {
   intraSilverSchedule := buildIntraLeagueMatchups(l2)
   fmt.Println(intraSilverSchedule)
 
+  // build entire intraLeague schedule
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
   for i:=0; i<len(intraSilverSchedule); i++ {
     intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
   }
   fmt.Println("intraLeagueSchedule")
   fmt.Println(intraLeagueSchedule)
+
+  // append intraLeague onto (and after) interLeague
+  completeSchedule := append(interLeagueSchedule, intraLeagueSchedule...)
+  fmt.Println("completeSchedule")
+  fmt.Println(completeSchedule)
 
 }
 
