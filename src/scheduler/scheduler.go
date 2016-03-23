@@ -18,20 +18,34 @@ func BuildSchedule(n int) {
 
   // split into two leagues
   l1, l2 := createTwoLeagues(n)
-  fmt.Println(l1,l2)
 
   // build schedule for inter conference
     // this is the first 10 weeks of the schedule
   var interLeagueSchedule [][]Matchup
   interLeagueSchedule = buildInterLeagueMatchups(int(n/2), l1, l2)
+  fmt.Println("interLeagueSchedule")
   fmt.Println(interLeagueSchedule)
 
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
-  intraLeagueSchedule := buildIntraLeagueMatchups(l1)
+  intraGoldSchedule := buildIntraLeagueMatchups(l1)
+  fmt.Println("intraGold")
+  fmt.Println(intraGoldSchedule)
+
+  fmt.Println("intraSilver")
+  intraSilverSchedule := buildIntraLeagueMatchups(l2)
+  fmt.Println(intraSilverSchedule)
+
+  intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
+  for i:=0; i<len(intraSilverSchedule); i++ {
+    intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
+  }
+  fmt.Println("intraLeagueSchedule")
   fmt.Println(intraLeagueSchedule)
+
 }
+
 
 func createTwoLeagues(n int) ([]int, []int) {
   if n %2 == 1 {
@@ -80,7 +94,6 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
 
 
 func buildIntraLeagueMatchups(l1 []int) [][]Matchup {
-  fmt.Println(len(l1))
   // l1 1,2,3,4, 5
   //    6,7,8,9,10
 
