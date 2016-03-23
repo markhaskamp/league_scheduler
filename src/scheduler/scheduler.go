@@ -37,6 +37,7 @@ func BuildSchedule(n int) {
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
   for i:=0; i<len(intraSilverSchedule); i++ {
     intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
+    intraLeagueSchedule[i] = randomizeStartTimes(intraLeagueSchedule[i])
   }
 
   // append intraLeague onto (and after) interLeague
