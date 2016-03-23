@@ -29,7 +29,7 @@ func BuildSchedule(n int) {
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
-  intraLeagueSchedule := buildIntraLeagueMatchups(l1, l2)
+  intraLeagueSchedule := buildIntraLeagueMatchups(l1)
   fmt.Println(intraLeagueSchedule)
 }
 
@@ -78,42 +78,50 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
   return foo
 }
 
-func buildIntraLeagueMatchups(l1 []int, l2 []int) [][]Matchup {
+
+func buildIntraLeagueMatchups(l1 []int) [][]Matchup {
+  fmt.Println(len(l1))
   // l1 1,2,3,4, 5
   //    6,7,8,9,10
 
-  topRow := l1[0:5]
-  bottomRow := l1[5:10]
+  n := len(l1)
+  topRow := l1[0:n/2]
+  bottomRow := l1[n/2:n]
 
-  for i:=0; i<9; i++ {
+  returnArray := make([][]Matchup, 9)
 
-    topIntra := make([]Matchup, 5)
+  for i:=0; i<n-1; i++ {
+
+    topIntra := make([]Matchup, n/2)
     for ndx,_ := range(topRow) {
       topIntra[ndx] = Matchup{t1:topRow[ndx], t2:bottomRow[ndx]}
     }
-    fmt.Println(topIntra)
+    returnArray[i] = topIntra
 
-    topRow, bottomRow = rotateForIntra(topRow, bottomRow)
+    topRow, bottomRow = rotateForIntra(n, topRow, bottomRow)
   }
 
-  return nil
+  return returnArray
 }
 
 
-func rotateForIntra(a []int, b []int) ([]int, []int) {
-    tmp := a[4]
-    a[4] = a[3]
-    a[3] = a[2]
-    a[2] = a[1]
+func rotateForIntra(n int, a []int, b []int) ([]int, []int) {
 
-    tmp2 := b[0]
-    b[0] = b[1]
-    b[1] = b[2]
-    b[2] = b[3]
-    b[3] =  b[4]
-    b[4] = tmp
+  var foo int
+  foo = n/2 - 1
+  
+  tmp := a[foo]
+  for i:=foo; i>0; i-- {
+    a[i] = a[i-1]
+  }
 
-    a[1] = tmp2
+  tmp2 := b[0]
+  for j:=0; j<foo; j++ {
+    b[j] = b[j+1]
+  }
 
-    return a,b
+  b[foo] = tmp
+  a[1] = tmp2
+
+  return a,b
 }
