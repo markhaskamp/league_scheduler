@@ -24,18 +24,18 @@ func BuildSchedule(n int) {
   var interLeagueSchedule [][]Matchup
   interLeagueSchedule = buildInterLeagueMatchups(int(n/2), l1, l2)
   fmt.Println("interLeagueSchedule")
-  fmt.Println(interLeagueSchedule)
+  printWeeklyMatchups(interLeagueSchedule)
 
   // build schedules for intra conferences for each conference
   // merge the two schedules
     // this is the last 9 weeks of the schedule
   intraGoldSchedule := buildIntraLeagueMatchups(l1)
   fmt.Println("intraGold")
-  fmt.Println(intraGoldSchedule)
+  printWeeklyMatchups(intraGoldSchedule)
 
   fmt.Println("intraSilver")
   intraSilverSchedule := buildIntraLeagueMatchups(l2)
-  fmt.Println(intraSilverSchedule)
+  printWeeklyMatchups(intraSilverSchedule)
 
   // build entire intraLeague schedule
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
@@ -43,12 +43,12 @@ func BuildSchedule(n int) {
     intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
   }
   fmt.Println("intraLeagueSchedule")
-  fmt.Println(intraLeagueSchedule)
+  printWeeklyMatchups(intraLeagueSchedule)
 
   // append intraLeague onto (and after) interLeague
   completeSchedule := append(interLeagueSchedule, intraLeagueSchedule...)
   fmt.Println("completeSchedule")
-  fmt.Println(completeSchedule)
+  printWeeklyMatchups(completeSchedule)
 
 }
 
@@ -144,3 +144,13 @@ func rotateForIntra(n int, a []int, b []int) ([]int, []int) {
 
   return a,b
 }
+
+func printWeeklyMatchups(matchups [][]Matchup) {
+
+  for _,v := range matchups {
+    fmt.Println(v)
+  }
+
+}
+
+
