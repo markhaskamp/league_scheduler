@@ -21,29 +21,23 @@ func BuildSchedule(n int) {
   // split into two leagues
   l1, l2 := createTwoLeagues(n)
 
-  // build schedule for inter conference
-    // this is the first 10 weeks of the schedule
   var interLeagueSchedule [][]Matchup
   interLeagueSchedule = buildInterLeagueMatchups(int(n/2), l1, l2)
 
-  // build schedules for intra conferences for each conference
-  // merge the two schedules
-    // this is the last 9 weeks of the schedule
   intraGoldSchedule := buildIntraLeagueMatchups(l1)
-
   intraSilverSchedule := buildIntraLeagueMatchups(l2)
 
-  // build entire intraLeague schedule
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
   for i:=0; i<len(intraSilverSchedule); i++ {
     intraLeagueSchedule[i] = append(intraGoldSchedule[i], intraSilverSchedule[i]...)
     intraLeagueSchedule[i] = randomizeStartTimes(intraLeagueSchedule[i])
   }
 
+  intraLeagueSchedule = randomizeWeeks(intraLeagueSchedule)
+
   // append intraLeague onto (and after) interLeague
   completeSchedule := append(interLeagueSchedule, intraLeagueSchedule...)
   printWeeklyMatchups(completeSchedule)
-
 }
 
 
@@ -105,6 +99,18 @@ func randomizeStartTimes(matchups []Matchup) []Matchup {
   return returnMatchups
 }
 
+func randomizeWeeks(weeks [][]Matchup) [][]Matchup {
+  returnWeeks := make([][]Matchup, len(weeks))
+  time.Sleep(321 * time.Millisecond)
+  randoms := randomRange(len(weeks))
+
+  for ndx,v := range randoms {
+    returnWeeks[ndx] = weeks[v]
+  }
+
+  return returnWeeks
+}
+
 
 func buildIntraLeagueMatchups(l1 []int) [][]Matchup {
   // l1 1,2,3,4, 5
@@ -164,9 +170,13 @@ func randomRange(n int) []int {
   s1 := rand.NewSource(time.Now().UnixNano())
   r1 := rand.New(s1)
 
-  foo := map[int]int{0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
+  foo := make(map[int]int)
+  for i:=0; i<n; i++ {
+    foo[i] = 0
+  }
+  //foo := map[int]int{0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
 
-  for not10(foo) {
+  for notDone(n, foo) {
     num := r1.Intn(n)
     if foo[num] == 0 {
       returnArray = append(returnArray, num)
@@ -179,12 +189,12 @@ func randomRange(n int) []int {
 }
 
 
-func not10(m map[int]int) bool {
+func notDone(n int, m map[int]int) bool {
   total := 0
 
   for _,v := range m {
     total += v
   }
 
-  return total < 10
+  return total < n
 }
