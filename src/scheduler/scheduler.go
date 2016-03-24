@@ -2,8 +2,9 @@ package scheduler
 
 import (
   "fmt"
-  "math/rand"
-  "time"
+  "crypto/rand"
+  "math/big"
+  "strconv"
 )
 
 
@@ -25,6 +26,7 @@ func BuildSchedule(n int) {
 
   intraGoldSchedule := buildIntraLeagueMatchups(l1)
   intraSilverSchedule := buildIntraLeagueMatchups(l2)
+
 
   intraLeagueSchedule := make([][]Matchup, len(intraSilverSchedule))
   for i:=0; i<len(intraSilverSchedule); i++ {
@@ -88,7 +90,6 @@ func buildInterLeagueMatchups(weeks int, l1 []int, l2 []int) [][]Matchup {
 
 func randomizeStartTimes(matchups []Matchup) []Matchup {
   returnMatchups := make([]Matchup, len(matchups))
-  time.Sleep(1234 * time.Millisecond)
   randoms := randomRange(len(matchups))
 
   for ndx,v := range randoms {
@@ -100,8 +101,8 @@ func randomizeStartTimes(matchups []Matchup) []Matchup {
 
 func randomizeWeeks(weeks [][]Matchup) [][]Matchup {
   returnWeeks := make([][]Matchup, len(weeks))
-  time.Sleep(321 * time.Millisecond)
   randoms := randomRange(len(weeks))
+  fmt.Println("randoms:", randoms)
 
   for ndx,v := range randoms {
     returnWeeks[ndx] = weeks[v]
@@ -154,6 +155,7 @@ func rotateForIntra(n int, a []int, b []int) ([]int, []int) {
   return a,b
 }
 
+
 func printWeeklyMatchups(matchups [][]Matchup) {
   for _,week := range matchups {
     fmt.Println(week)
@@ -163,8 +165,6 @@ func printWeeklyMatchups(matchups [][]Matchup) {
 
 func randomRange(n int) []int {
   returnArray := make([]int, 0)
-  s1 := rand.NewSource(time.Now().UnixNano())
-  r1 := rand.New(s1)
 
   randomMap := make(map[int]int)
   for i:=0; i<n; i++ {
@@ -172,7 +172,8 @@ func randomRange(n int) []int {
   }
 
   for notDone(n, randomMap) {
-    num := r1.Intn(n)
+    num := GetRandomNumber(n)
+
     if randomMap[num] == 0 {
       returnArray = append(returnArray, num)
     }
@@ -193,3 +194,22 @@ func notDone(n int, m map[int]int) bool {
 
   return total < n
 }
+
+
+func GetRandomNumber(n int) int {
+
+    nBig, err := rand.Int(rand.Reader, big.NewInt(int64(n)))
+    if err != nil {
+      panic(err)
+    }
+
+    s := fmt.Sprintf("%v", nBig.Int64())
+
+    returnNum, err := strconv.Atoi(s)
+    if err != nil {
+      panic(err)
+    }
+
+    return returnNum
+}
+
